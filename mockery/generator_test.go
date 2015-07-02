@@ -170,7 +170,7 @@ func TestGeneratorPrologue(t *testing.T) {
 
 	expected := `package mocks
 
-import "github.com/vektra/mockery/mockery/fixtures"
+import "github.com/ryanbrainard/mockery/mockery/fixtures"
 import "github.com/stretchr/testify/mock"
 
 `
@@ -191,7 +191,7 @@ func TestGeneratorProloguewithImports(t *testing.T) {
 
 	expected := `package mocks
 
-import "github.com/vektra/mockery/mockery/fixtures"
+import "github.com/ryanbrainard/mockery/mockery/fixtures"
 import "github.com/stretchr/testify/mock"
 
 import "net/http"

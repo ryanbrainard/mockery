@@ -10,7 +10,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/vektra/mockery/mockery"
+	"github.com/ryanbrainard/mockery/mockery"
 )
 
 var fName = flag.String("name", "", "name of interface to generate mock for")

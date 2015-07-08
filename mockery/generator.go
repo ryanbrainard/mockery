@@ -287,6 +287,10 @@ func (g *Generator) Generate() error {
 		paramNames, paramTypes, params := g.genList(ftype.Params, true)
 		_, returnTypes, returns := g.genList(ftype.Results, false)
 
+		g.printf("func (m *%s) Name_%s() string {\n", g.mockName(), fname)
+		g.printf("\treturn %s\n", "\""+fname+"\"")
+		g.printf("}\n")
+
 		paramsInterface := []string{}
 		paramsAnything := []string{}
 		for _, p := range paramNames {

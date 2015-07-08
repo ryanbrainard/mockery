@@ -22,6 +22,9 @@ func TestGenerator(t *testing.T) {
 	mock.Mock
 }
 
+func (m *Requester) Name_Get() string {
+	return "Get"
+}
 func (m *Requester) MockOn_Get(path interface{}) *mock.Mock {
 	return m.Mock.On("Get", path)
 }
@@ -70,6 +73,9 @@ func TestGeneratorSingleReturn(t *testing.T) {
 	mock.Mock
 }
 
+func (m *Requester2) Name_Get() string {
+	return "Get"
+}
 func (m *Requester2) MockOn_Get(path interface{}) *mock.Mock {
 	return m.Mock.On("Get", path)
 }
@@ -111,6 +117,9 @@ func TestGeneratorNoArguments(t *testing.T) {
 	mock.Mock
 }
 
+func (m *Requester3) Name_Get() string {
+	return "Get"
+}
 func (m *Requester3) MockOn_Get() *mock.Mock {
 	return m.Mock.On("Get")
 }
@@ -152,6 +161,9 @@ func TestGeneratorNoNothing(t *testing.T) {
 	mock.Mock
 }
 
+func (m *Requester4) Name_Get() string {
+	return "Get"
+}
 func (m *Requester4) MockOn_Get() *mock.Mock {
 	return m.Mock.On("Get")
 }
@@ -185,6 +197,9 @@ func TestGeneratorUnexported(t *testing.T) {
 	mock.Mock
 }
 
+func (m *mockRequester) Name_Get() string {
+	return "Get"
+}
 func (m *mockRequester) MockOn_Get() *mock.Mock {
 	return m.Mock.On("Get")
 }
@@ -263,6 +278,9 @@ func TestGeneratorPointers(t *testing.T) {
 	mock.Mock
 }
 
+func (m *RequesterPtr) Name_Get() string {
+	return "Get"
+}
 func (m *RequesterPtr) MockOn_Get(path interface{}) *mock.Mock {
 	return m.Mock.On("Get", path)
 }
@@ -315,6 +333,9 @@ func TestGeneratorSlice(t *testing.T) {
 	mock.Mock
 }
 
+func (m *RequesterSlice) Name_Get() string {
+	return "Get"
+}
 func (m *RequesterSlice) MockOn_Get(path interface{}) *mock.Mock {
 	return m.Mock.On("Get", path)
 }
@@ -367,6 +388,9 @@ func TestGeneratorArrayLiteralLen(t *testing.T) {
 	mock.Mock
 }
 
+func (m *RequesterArray) Name_Get() string {
+	return "Get"
+}
 func (m *RequesterArray) MockOn_Get(path interface{}) *mock.Mock {
 	return m.Mock.On("Get", path)
 }
@@ -419,6 +443,9 @@ func TestGeneratorNamespacedTypes(t *testing.T) {
 	mock.Mock
 }
 
+func (m *RequesterNS) Name_Get() string {
+	return "Get"
+}
 func (m *RequesterNS) MockOn_Get(path interface{}) *mock.Mock {
 	return m.Mock.On("Get", path)
 }
@@ -470,6 +497,9 @@ func TestGeneratorHavingNoNamesOnArguments(t *testing.T) {
 	mock.Mock
 }
 
+func (m *KeyManager) Name_GetKey() string {
+	return "GetKey"
+}
 func (m *KeyManager) MockOn_GetKey(_a0 interface{}, _a1 interface{}) *mock.Mock {
 	return m.Mock.On("GetKey", _a0, _a1)
 }
@@ -522,6 +552,9 @@ func TestGeneratorElidedType(t *testing.T) {
 	mock.Mock
 }
 
+func (m *RequesterElided) Name_Get() string {
+	return "Get"
+}
 func (m *RequesterElided) MockOn_Get(path interface{}, url interface{}) *mock.Mock {
 	return m.Mock.On("Get", path, url)
 }
@@ -563,6 +596,9 @@ func TestGeneratorFuncType(t *testing.T) {
 	mock.Mock
 }
 
+func (m *Fooer) Name_Foo() string {
+	return "Foo"
+}
 func (m *Fooer) MockOn_Foo(f interface{}) *mock.Mock {
 	return m.Mock.On("Foo", f)
 }
@@ -584,6 +620,9 @@ func (m *Fooer) Foo(f func(string) string) error {
 
 	return r0
 }
+func (m *Fooer) Name_Bar() string {
+	return "Bar"
+}
 func (m *Fooer) MockOn_Bar(f interface{}) *mock.Mock {
 	return m.Mock.On("Bar", f)
 }
@@ -595,6 +634,9 @@ func (m *Fooer) MockOnAny_Bar() *mock.Mock {
 }
 func (m *Fooer) Bar(f func([]int) ) {
 	m.Called(f)
+}
+func (m *Fooer) Name_Baz() string {
+	return "Baz"
 }
 func (m *Fooer) MockOn_Baz(path interface{}) *mock.Mock {
 	return m.Mock.On("Baz", path)
@@ -639,6 +681,9 @@ func TestGeneratorChanType(t *testing.T) {
 	mock.Mock
 }
 
+func (m *AsyncProducer) Name_Input() string {
+	return "Input"
+}
 func (m *AsyncProducer) MockOn_Input() *mock.Mock {
 	return m.Mock.On("Input")
 }
@@ -662,6 +707,9 @@ func (m *AsyncProducer) Input() chan<- bool {
 
 	return r0
 }
+func (m *AsyncProducer) Name_Output() string {
+	return "Output"
+}
 func (m *AsyncProducer) MockOn_Output() *mock.Mock {
 	return m.Mock.On("Output")
 }
@@ -684,6 +732,9 @@ func (m *AsyncProducer) Output() <-chan bool {
 	}
 
 	return r0
+}
+func (m *AsyncProducer) Name_Whatever() string {
+	return "Whatever"
 }
 func (m *AsyncProducer) MockOn_Whatever() *mock.Mock {
 	return m.Mock.On("Whatever")

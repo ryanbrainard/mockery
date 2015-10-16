@@ -426,6 +426,50 @@ func (m *RequesterArray) Get(path string) ([2]string, error) {
 	assert.Equal(t, expected, gen.buf.String())
 }
 
+func TestGeneratorVarArg(t *testing.T) {
+	parser := NewParser()
+	parser.Parse(filepath.Join(fixturePath, "requester_vararg.go"))
+
+	iface, err := parser.Find("RequesterVarArg")
+
+	gen := NewGenerator(iface)
+
+	err = gen.Generate()
+	assert.NoError(t, err)
+
+	expected := `type RequesterVarArg struct {
+	mock.Mock
+}
+
+func (m *RequesterVarArg) Name_Get() string {
+	return "Get"
+}
+func (m *RequesterVarArg) MockOn_Get(paths interface{}) *mock.Mock {
+	return m.Mock.On("Get", paths)
+}
+func (m *RequesterVarArg) MockOnTyped_Get(paths ...string) *mock.Mock {
+	return m.Mock.On("Get", paths)
+}
+func (m *RequesterVarArg) MockOnAny_Get() *mock.Mock {
+	return m.Mock.On("Get", mock.Anything)
+}
+func (m *RequesterVarArg) Get(paths ...string) error {
+	ret := m.Called(paths)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(...string) error); ok {
+		r0 = rf(paths...)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+`
+
+	assert.Equal(t, expected, gen.buf.String())
+}
+
 func TestGeneratorNamespacedTypes(t *testing.T) {
 	parser := NewParser()
 	parser.Parse(filepath.Join(fixturePath, "requester_ns.go"))

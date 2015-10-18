@@ -13,7 +13,6 @@ import (
 	"golang.org/x/tools/imports"
 
 	"github.com/vektra/errors"
-	"regexp"
 )
 
 type Generator struct {
@@ -236,15 +235,16 @@ func (g *Generator) typeFieldList(fl *ast.FieldList, optParen bool) string {
 	return strings.Join(list, ", ")
 }
 
-func (g *Generator) genList(list *ast.FieldList, addNames bool) ([]string, []string, []string) {
+func (g *Generator) genList(list *ast.FieldList, addNames bool) ([]string, []string, []string, []string) {
 	var (
 		params []string
 		names  []string
 		types  []string
+		args   []string
 	)
 
 	if list == nil {
-		return params, names, types
+		return params, names, types, args
 	}
 
 	for idx, param := range list.List {
@@ -258,6 +258,7 @@ func (g *Generator) genList(list *ast.FieldList, addNames bool) ([]string, []str
 				names = append(names, pname)
 				types = append(types, ts)
 				params = append(params, fmt.Sprintf("%s %s", pname, ts))
+				args = append(args, g.argName(pname, param.Type))
 
 				continue
 			}
@@ -267,24 +268,26 @@ func (g *Generator) genList(list *ast.FieldList, addNames bool) ([]string, []str
 				names = append(names, pname)
 				types = append(types, ts)
 				params = append(params, fmt.Sprintf("%s %s", pname, ts))
+				args = append(args, g.argName(pname, param.Type))
 			}
 		} else {
 			names = append(names, "")
 			types = append(types, ts)
 			params = append(params, ts)
+			args = append(args, g.argName("", param.Type))
 		}
 	}
 
-	return names, types, params
+	return names, types, params, args
 }
 
-func (g *Generator) paramsAsArgNames(params []string) []string {
-	args := []string{}
-	r := regexp.MustCompile("(.+?) (\\.{3})?.+")
-	for _, p := range params {
-		args = append(args, r.ReplaceAllString(p, "$1$2"))
+func (g *Generator) argName(pname string, typ ast.Expr) string {
+	switch typ.(type) {
+	case *ast.Ellipsis:
+		return pname + "..."
+	default:
+		return pname
 	}
-	return args
 }
 
 var ErrNotSetup = errors.New("not setup")
@@ -304,8 +307,8 @@ func (g *Generator) Generate() error {
 
 		fname := method.Names[0].Name
 
-		paramNames, paramTypes, params := g.genList(ftype.Params, true)
-		_, returnTypes, returns := g.genList(ftype.Results, false)
+		paramNames, paramTypes, params, args := g.genList(ftype.Params, true)
+		_, returnTypes, returns, _ := g.genList(ftype.Results, false)
 
 		g.printf("func (m *%s) Name_%s() string {\n", g.mockName(), fname)
 		g.printf("\treturn %s\n", "\""+fname+"\"")
@@ -339,7 +342,7 @@ func (g *Generator) Generate() error {
 			for idx, typ := range returnTypes {
 				g.printf("\tvar r%d %s\n", idx, typ)
 				g.printf("\tif rf, ok := ret.Get(%d).(func(%s) %s); ok {\n", idx, strings.Join(paramTypes, ", "), typ)
-				g.printf("\t\tr%d = rf(%s)\n", idx, strings.Join(g.paramsAsArgNames(params), ", "))
+				g.printf("\t\tr%d = rf(%s)\n", idx, strings.Join(args, ", "))
 				g.printf("\t} else {\n")
 				if typ == "error" {
 					g.printf("\t\tr%d = ret.Error(%d)\n", idx, idx)

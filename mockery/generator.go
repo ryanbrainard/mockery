@@ -50,7 +50,7 @@ func (g *Generator) GenerateIPPrologue() {
 }
 
 func (g *Generator) generateMockOn(variant string, fname string, builderParams []string, onParams []string) {
-	g.printf("func (m *%s) MockOn%s_%s(%s) *mock.Mock {\n", g.mockName(), variant, fname, strings.Join(builderParams, ", "))
+	g.printf("func (m *%s) MockOn%s_%s(%s) *mock.Call {\n", g.mockName(), variant, fname, strings.Join(builderParams, ", "))
 	g.printf("\treturn m.Mock.On(%s)\n", strings.Join(append([]string{"\"" + fname + "\""}, onParams...), ", "))
 	g.printf("}\n")
 }
@@ -106,7 +106,7 @@ func (g *Generator) GeneratePrologueNote(note string) {
 	if note != "" {
 		g.printf("\n")
 		for _, n := range strings.Split(note, "\\n") {
-				g.printf("// %s\n", n)
+			g.printf("// %s\n", n)
 		}
 		g.printf("\n")
 	}

@@ -158,13 +158,13 @@ func genMock(iface *mockery.Interface) {
 
 	gen := mockery.NewGenerator(iface)
 
+	gen.GeneratePrologueNote(*fNote)
+
 	if *fIP {
 		gen.GenerateIPPrologue()
 	} else {
 		gen.GeneratePrologue(pkg)
 	}
-
-	gen.GeneratePrologueNote(*fNote)
 
 	err := gen.Generate()
 	if err != nil {
